@@ -1,0 +1,3 @@
+D:/mownit/lab0/cmake-build-debug/CMakeFiles/lab0.dir
+D:/mownit/lab0/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/mownit/lab0/cmake-build-debug/CMakeFiles/rebuild_cache.dir
