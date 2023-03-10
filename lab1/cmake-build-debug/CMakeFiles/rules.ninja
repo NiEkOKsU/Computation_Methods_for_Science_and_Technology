@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\pc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SD:\mownit\lab0 -BD:\mownit\lab0\cmake-build-debug
+  command = C:\Users\pc\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8617.54\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SD:\Computation_Methods_for_Science_and_Technology\lab1 -BD:\Computation_Methods_for_Science_and_Technology\lab1\cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

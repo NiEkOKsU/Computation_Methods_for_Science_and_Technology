@@ -1,4 +1,4 @@
-# Install script for directory: D:/mownit/lab0
+# Install script for directory: D:/Computation_Methods_for_Science_and_Technology/lab1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/mownit/lab0/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Computation_Methods_for_Science_and_Technology/lab1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
