@@ -1,0 +1,3 @@
+Po uruchomieniu terminalu w katalogu z plikiem źródłowym należy uzyc komend:
+g++ -o <wybrana_nazwa> main.cpp - żeby skompilować
+./<wybrana_nazwa> - żeby uruchomić
