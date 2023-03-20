@@ -45,20 +45,24 @@ def mean_square_error(fval, intrval, n):
     return error
 
 def main():
-    amount = 1000
+    amount = 50000
     low_bound_x = -math.pi
     up_bound_x = 3 * math.pi
     points = list(map(lambda x: (low_bound_x + x*(up_bound_x-low_bound_x)/amount), range(amount)))
     fun_values = list(map(fun, points))
-    n = int(input("Podaj ilość węzłów: "))
-    interpolated = [newton(points[i], chebyshew(low_bound_x, up_bound_x, n)) for i in range(amount)]
-    print("Największa różnica: ", max_diff(fun_values, interpolated, amount))
-    print("Błąd średniokwadratowy: ", max_diff(fun_values, interpolated, amount))
-    plt.xlabel('oś x')
-    plt.ylabel('oś y')
-    plt.title('Interpolacja')
-    plt.plot(points, fun_values, 'b-', points, interpolated, 'r-',
-         chebyshew(low_bound_x, up_bound_x, n), list(map(fun, chebyshew(low_bound_x, up_bound_x, n))), 'y.')
-    plt.show()
+    nodes_num = [17,20,50]
+    for n in nodes_num:
+        nodes = chebyshew(low_bound_x, up_bound_x, n)
+        interpolated = [newton(points[i], nodes) for i in range(amount)]
+        print("Największa różnica: ", max_diff(fun_values, interpolated, amount))
+        print("Błąd średniokwadratowy: ", mean_square_error(fun_values, interpolated, amount))
+        plt.xlabel('oś x')
+        plt.ylabel('oś y')
+        plt.title('Interpolacja')
+        plt.plot(points, fun_values, 'b-', label='f')
+        plt.plot(points, interpolated, 'g-', label='wielomian interpolujący')
+        plt.plot(nodes, list(map(fun, nodes)), 'r.', label='punkty')
+        plt.legend()
+        plt.show()
 
 main()
