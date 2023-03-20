@@ -1,3 +1,0 @@
-D:/Computation_Methods_for_Science_and_Technology/lab1/cmake-build-debug/CMakeFiles/lab0.dir
-D:/Computation_Methods_for_Science_and_Technology/lab1/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Computation_Methods_for_Science_and_Technology/lab1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
