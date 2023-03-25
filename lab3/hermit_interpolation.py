@@ -58,12 +58,12 @@ def main():
     up_bound_x = 3 * math.pi
     points = list(map(lambda x: (low_bound_x + x*(up_bound_x-low_bound_x)/amount), range(amount)))
     fun_values = list(map(fun, points))
-    nodes_num = [20]
+    nodes_num = [15]
     for n in nodes_num:
         nodes = equadistant(low_bound_x, up_bound_x, n)
         interpolated = [hermie(points[i], nodes) for i in range(amount)]
-        print("Największa różnica: ", max_diff(fun_values, interpolated, amount))
-        print("Błąd średniokwadratowy: ", mean_square_error(fun_values, interpolated, amount))
+        print("Największa różnica dla ", n ," węzłów : ", max_diff(fun_values, interpolated, amount))
+        print("Błąd średniokwadratowy dla ", n ," węzłów : ", mean_square_error(fun_values, interpolated, amount))
         plt.xlabel('oś x')
         plt.ylabel('oś y')
         plt.title('Interpolacja')
