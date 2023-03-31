@@ -5,28 +5,30 @@ import matplotlib.pyplot as plt
 def fun(x):
     return math.e**(4*math.cos(2*x))
 
-def dfun(x):
-    return -8*math.e**(4*math.cos(2*x))*math.sin(2*x)
+def dfun(x, step):
+    x1, x2 = x - step, x + step
+    if x == -math.pi:
+        return (fun(x2) - fun(x)) / step
+    if x == 3*math.pi:
+        return (fun(x) - fun(x1)) / step
+    return (fun(x2) - fun(x1)) / 2*step
 
 def hermie(x, nodes):
     n = len(nodes)
-    z = []
-    for i in range(n):
-        z.append(nodes[i])
-        z.append(nodes[i])
     n2 = 2*n
+    z = [nodes[i//2] for i in range(n2)]
+    result = 0
+    helper = 1
     matrix = np.zeros((n2, n2))
+    step = nodes[1] - nodes[0]
     for i in range(n2):
         for j in range(i+1):
             if j == 0:
                 matrix[i][j] = fun(z[i])
             elif j == 1 & i % 2 == 1:
-                matrix[i][j] = dfun(z[i])
+                matrix[i][j] = dfun(z[i], step)
             else:
                 matrix[i][j] = (matrix[i][j-1] - matrix[i-1][j-1]) / (z[i] - z[i-j])
-    result = 0
-    helper = 1
-    for i in range(n2):
         result += matrix[i][i] * helper
         helper *= (x - z[i])
     return result
@@ -58,7 +60,7 @@ def main():
     up_bound_x = 3 * math.pi
     points = list(map(lambda x: (low_bound_x + x*(up_bound_x-low_bound_x)/amount), range(amount)))
     fun_values = list(map(fun, points))
-    nodes_num = [15]
+    nodes_num = [2,4,5,7,8,10,13,15,17,20]
     for n in nodes_num:
         nodes = equadistant(low_bound_x, up_bound_x, n)
         interpolated = [hermie(points[i], nodes) for i in range(amount)]
