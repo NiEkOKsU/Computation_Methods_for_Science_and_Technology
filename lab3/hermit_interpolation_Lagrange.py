@@ -6,13 +6,7 @@ def fun(x):
     return math.e**(4*math.cos(2*x))
 
 def dfun(x):
-    step = 4 * math.pi / (50000 - 1) 
-    x1, x2 = x - step, x + step
-    if x == -math.pi:
-        return (fun(x2) - fun(x)) / step
-    if x == 3*math.pi:
-        return (fun(x) - fun(x1)) / step
-    return (fun(x2) - fun(x1)) / 2*step
+    return -8*math.e**(4*math.cos(2*x))*math.sin(2*x)
 
 def hermie(x, nodes):
     n = len(nodes)
@@ -69,7 +63,7 @@ def main():
     up_bound_x = 3 * math.pi
     points = list(map(lambda x: (low_bound_x + x*(up_bound_x-low_bound_x)/amount), range(amount)))
     fun_values = list(map(fun, points))
-    nodes_num = [17]
+    nodes_num = [2,4,5,7,8,10,12,15,17,20]
     for n in nodes_num:
         nodes = chebyshew(low_bound_x, up_bound_x, n)
         interpolated = [hermie(points[i], nodes) for i in range(amount)]

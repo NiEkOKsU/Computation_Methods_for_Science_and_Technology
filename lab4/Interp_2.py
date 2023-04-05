@@ -1,13 +1,12 @@
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-from pandas import DataFrame
+import pandas as pd
 
-def save(filename, results):
-    filename += '.xlsx'
-    df = DataFrame(data=results)
+def save(results):
+    df = pd.DataFrame(results)
     print(df)
-    df.to_excel(filename, sheet_name='sheet1', index=False, header=False)
+    df.to_excel("res_eq.xlsx", sheet_name='sheet1')
 
 def f(x):
     return np.e**(4*np.cos(2*x))
@@ -15,44 +14,6 @@ def f(x):
 
 def get_ys(xs):
     return [f(x) for x in xs]
-
-
-def spline3(x_points, y_points, xs, boundary_cond):
-    size = len(x_points) - 2
-    matrix = np.zeros((size, size))
-    for i in range(size):
-        matrix[i][i] = 4
-        if i - 1 > 0:
-             matrix[i][i - 1] = 1
-        if i + 1 < size:
-            matrix[i][i + 1] = 1
-
-    h = [x_points[i+1] - x_points[i] for i in range(size)]
-    g = [6 / (h[i]**2) * (y_points[i] - 2*y_points[i+1] + y_points[i+2]) for i in range(size)]
-    h.append(x_points[-1] - x_points[-2])
-    z = np.linalg.solve(matrix, g)
-
-    z = list(z)
-    if boundary_cond == 1:
-        z = [0] + z + [0]
-    else:
-        z = [z[0]] + z + [z[-1]]
-
-    a = []; b = []; c = []; d = []
-    for i in range(size+1):
-        a.append((z[i+1] - z[i]) / (6 * h[i]))
-        b.append(0.5 * z[i])
-        c.append((y_points[i+1] - y_points[i]) / h[i] - (z[i+1] + 2 * z[i]) / 6 * h[i])
-        d.append(y_points[i])
-
-    nr_fun = 0
-    ys = []
-    for i in range(len(xs)):
-        while x_points[nr_fun + 1] < xs[i] < x_points[-1]:
-            nr_fun += 1
-        ys.append(get_val([d[nr_fun], c[nr_fun], b[nr_fun], a[nr_fun]], x_points[nr_fun], xs[i]))
-
-    return ys
 
 def spline2(x_points, y_points, xs, boundary_cond):
     size = len(x_points) - 1
@@ -117,7 +78,7 @@ def chebyshew(a, b, no):
     return ret
 
 
-def get_xs(a, b, n):
+def equidistant(a, b, n):
     step = (b-a)/(n-1)
     ret = []
     for _ in range(n):
@@ -131,37 +92,31 @@ def main():
     end = 3*np.pi
     n_draw = 5000
 
-    xs = get_xs(start, end, n_draw)
+    xs = chebyshew(start, end, n_draw)
     ys_or = get_ys(xs)
-    res = [['Liczba węzłów', 'spl2, nat', 'spl2, lin', 'spl3, nat', 'spl3, par']]
+    res = [['Liczba węzłów', 'spl2, nat', 'spl2, lin']]
 
-    for i in range(3, 21):
+    for i in range(100, 101):
         print(i)
         plt.figure(figsize=(9, 6))
-        xp = get_xs(start, end, i)
+        xp = chebyshew(start, end, i)
         yp = get_ys(xp)
-        plt.plot(xp, yp, 'y.', markersize=10)
+        plt.plot(xp, yp, 'r.', markersize=10)
         plt.plot(xs, ys_or, 'y', label='funkcja interpolowana')
         r = [i]
         #if True: #spline == 2 or spline == 0:
         ys = spline2(xp, yp, xs, 1)
-        plt.plot(xs, ys, 'g', label='2 stopien naturalna')
-        r.append(get_norm(ys, ys_or, 'eu'))
+        plt.plot(xs, ys, 'grey', label='2 stopien naturalna')
+        r.append(get_norm(ys, ys_or, 'max'))
         ys = spline2(xp, yp, xs, 2)
         plt.plot(xs, ys, 'm', label='2 stopien, pierwsza funkcja liniowa')
-        r.append(get_norm(ys, ys_or, 'eu'))
-        #if True: #spline == 3 or spline == 0:
-        ys = spline3(xp, yp, xs, 1)
-        plt.plot(xs, ys, 'grey', label='3 stopień naturalna')
-        r.append(get_norm(ys, ys_or, 'eu'))
-        ys = spline3(xp, yp, xs, 2)
-        plt.plot(xs, ys, 'b', label='3 stopien paraboliczna')
-        r.append(get_norm(ys, ys_or, 'eu'))
+        r.append(get_norm(ys, ys_or, 'max'))
         res.append(r)
         plt.xlabel('x')
         plt.ylabel('y')
         plt.legend()
-        #plt.show()
-    save('res_eq', res)
+        plt.show()
+    df = pd.DataFrame(res)
+    print(df)
 
 main()
