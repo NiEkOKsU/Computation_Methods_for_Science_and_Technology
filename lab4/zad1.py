@@ -96,10 +96,18 @@ def get_val(coeff, xi, x):
 
 
 def get_norm(y1, y2, which):
+    n = len(y1)
     if which == "max":
-        return np.linalg.norm(np.subtract(y2, y1), np.inf)
+        max_df = 0
+        for i in range(n):
+            max_df = max(abs(y1[i] - y2[i]), max_df)
+        return max_df
     if which == "eu":
-        return np.linalg.norm(np.subtract(y2, y1))
+        error = 0
+        for i in range(n):
+            error += (y1[i] - y2[i]) ** 2
+        error = np.sqrt(error) / n
+        return error
 
 
 def chebyshew(a, b, no):
@@ -120,7 +128,7 @@ def get_xs(a, b, n):
 
 def main():
     start = -np.pi
-    end = 2*np.pi
+    end = 3*np.pi
     n_draw = 5000
 
     xs = get_xs(start, end, n_draw)
@@ -133,28 +141,27 @@ def main():
         xp = get_xs(start, end, i)
         yp = get_ys(xp)
         plt.plot(xp, yp, 'y.', markersize=10)
-        plt.plot(xs, ys_or, 'y', label='Interpolated')
+        plt.plot(xs, ys_or, 'y', label='funkcja interpolowana')
         r = [i]
         #if True: #spline == 2 or spline == 0:
         ys = spline2(xp, yp, xs, 1)
-        plt.plot(xs, ys, 'g', label='2nd degree natural spline')
+        plt.plot(xs, ys, 'g', label='2 stopien naturalna')
         r.append(get_norm(ys, ys_or, 'eu'))
         ys = spline2(xp, yp, xs, 2)
-        plt.plot(xs, ys, 'm', label='2nd degree first function is linear')
+        plt.plot(xs, ys, 'm', label='2 stopien, pierwsza funkcja liniowa')
         r.append(get_norm(ys, ys_or, 'eu'))
         #if True: #spline == 3 or spline == 0:
         ys = spline3(xp, yp, xs, 1)
-        plt.plot(xs, ys, 'grey', label='3rd degree natural spline')
+        plt.plot(xs, ys, 'grey', label='3 stopień naturalna')
         r.append(get_norm(ys, ys_or, 'eu'))
         ys = spline3(xp, yp, xs, 2)
-        plt.plot(xs, ys, 'b', label='3rd degree parabolic spline')
+        plt.plot(xs, ys, 'b', label='3 stopien paraboliczna')
         r.append(get_norm(ys, ys_or, 'eu'))
         res.append(r)
-        s = "plot" + str(i) + ".pdf"
         plt.xlabel('x')
         plt.ylabel('y')
         plt.legend()
-        plt.show()
+        #plt.show()
     save('res_eq', res)
 
 main()

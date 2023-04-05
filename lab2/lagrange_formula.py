@@ -38,7 +38,7 @@ def mean_square_error(fval, intrval, n):
     return error
 
 def main():
-    amount = 50000
+    amount = 5000
     low_bound_x = -math.pi
     up_bound_x = 3 * math.pi
     points = list(map(lambda x: (low_bound_x + x*(up_bound_x-low_bound_x)/amount), range(amount)))
