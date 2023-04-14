@@ -92,14 +92,14 @@ def main():
     end = 3*np.pi
     n_draw = 5000
 
-    xs = chebyshew(start, end, n_draw)
+    xs = equidistant(start, end, n_draw)
     ys_or = get_ys(xs)
     res = [['Liczba węzłów', 'spl2, nat', 'spl2, lin']]
 
     for i in range(100, 101):
         print(i)
         plt.figure(figsize=(9, 6))
-        xp = chebyshew(start, end, i)
+        xp = equidistant(start, end, i)
         yp = get_ys(xp)
         plt.plot(xp, yp, 'r.', markersize=10)
         plt.plot(xs, ys_or, 'y', label='funkcja interpolowana')
@@ -107,10 +107,10 @@ def main():
         #if True: #spline == 2 or spline == 0:
         ys = spline2(xp, yp, xs, 1)
         plt.plot(xs, ys, 'grey', label='2 stopien naturalna')
-        r.append(get_norm(ys, ys_or, 'max'))
+        r.append(get_norm(ys, ys_or, 'eu'))
         ys = spline2(xp, yp, xs, 2)
         plt.plot(xs, ys, 'm', label='2 stopien, pierwsza funkcja liniowa')
-        r.append(get_norm(ys, ys_or, 'max'))
+        r.append(get_norm(ys, ys_or, 'eu'))
         res.append(r)
         plt.xlabel('x')
         plt.ylabel('y')

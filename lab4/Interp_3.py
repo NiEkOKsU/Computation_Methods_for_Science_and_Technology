@@ -92,14 +92,14 @@ def main():
     end = 3*np.pi
     n_draw = 5000
 
-    xs = chebyshew(start, end, n_draw)
+    xs = equidistant(start, end, n_draw)
     ys_or = get_ys(xs)
     res = [['Liczba węzłów', 'spl3, nat', 'spl3, par']]
 
-    for i in range(3, 21):
+    for i in range(100, 101):
         print(i)
         plt.figure(figsize=(9, 6))
-        xp = chebyshew(start, end, i)
+        xp = equidistant(start, end, i)
         yp = get_ys(xp)
         plt.plot(xp, yp, 'r.', markersize=10)
         plt.plot(xs, ys_or, 'y', label='funkcja interpolowana')
