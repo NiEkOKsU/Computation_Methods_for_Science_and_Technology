@@ -11,7 +11,6 @@ def save(results):
 def f(x):
     return np.e**(4*np.cos(2*x))
 
-
 def get_ys(xs):
     return [f(x) for x in xs]
 
