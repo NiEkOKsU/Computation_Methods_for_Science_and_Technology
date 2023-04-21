@@ -6,7 +6,7 @@ import pandas as pd
 def save(results):
     df = pd.DataFrame(results)
     print(df)
-    df.to_excel("res_eq.xlsx", sheet_name='sheet1')
+    df.to_excel(r'D:\Computation_Methods_for_Science_and_Technology\lab5\res_eq.xlsx')
 
 def chebyshew(x0, x1, n):
     result = []
@@ -55,34 +55,34 @@ def regress(f, nodes, degree):
     for i in range(n):
         for j in range(degree+1):
             matrix[i][j] += nodes[i]**j
-    return np.linalg.inv(np.transpose(matrix).dot(matrix)).dot(np.transpose(matrix)).dot(values)
+    q, r = np.linalg.qr(matrix)
+    y = np.dot(np.transpose(q), values)
+    x = np.linalg.solve(r, y)
+    return x
 
 
 def main():
     wezly = [4,10,15,20,30,50,100]
     res = [['Liczba węzłów', 'stopien wielomanu','blad max', 'mse']]
+    amount = 10000
+    x0 = -math.pi
+    x1 = 3 * math.pi
+    numbers = range(amount)
     for n in wezly:
-        for degree in range(2,10):
+        for degree in range(3,10):
             if n<=degree:
                 break
-            amount = 10000
-            x0 = -math.pi
-            x1 = 3 * math.pi
-            numbers = range(amount)
             points = list(map(lambda x: (x0 + x*(x1-x0)/amount), numbers))
             values = list(map(f, points))
             nodes = equadistant(x0, x1, n)
-            regressed = []
-
-            for i in range(amount):
-                regressed.append(poly(regress(f, nodes, degree), points[i]))
-            res.append([n, degree, max_diff(regressed, values, n), mean_square_error(regressed, values, n)])
-
+            regressed = [poly(regress(f, nodes, degree), points[i]) for i in range(amount)]
+            res.append([n, degree, max_diff(regressed, values, amount), mean_square_error(regressed, values, amount)])
+            print(n, degree)
             plt.xlabel('oś X')
             plt.ylabel('oś Y')
             plt.title('Aproksymacja')
-            plt.plot(points, values, 'b-', points, regressed, 'r-',
-                    nodes, list(map(f, nodes)), 'y.')
+            plt.plot(points, values, 'b-', points, regressed, 'grey',
+                    nodes, list(map(f, nodes)), 'r.', markersize=10)
             plt.show()
-
+    save(res)
 main()
