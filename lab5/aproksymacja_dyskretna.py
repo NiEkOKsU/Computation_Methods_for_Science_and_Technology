@@ -6,7 +6,8 @@ import pandas as pd
 def save(results):
     df = pd.DataFrame(results)
     print(df)
-    df.to_excel(r'D:\Computation_Methods_for_Science_and_Technology\lab5\res_eq.xlsx')
+    df.to_excel(r'C:\Users\proks\OneDrive\Pulpit\Computation_Methods_for_Science_and_Technology\lab5\res_ch.xlsx')
+
 
 def chebyshew(x0, x1, n):
     result = []
@@ -62,14 +63,14 @@ def regress(f, nodes, degree):
 
 
 def main():
-    wezly = [4,10,15,20,30,50,100]
+    wezly = [30]
     res = [['Liczba węzłów', 'stopien wielomanu','blad max', 'mse']]
     amount = 10000
     x0 = -math.pi
     x1 = 3 * math.pi
     numbers = range(amount)
     for n in wezly:
-        for degree in range(3,10):
+        for degree in [20,25]:
             if n<=degree:
                 break
             points = list(map(lambda x: (x0 + x*(x1-x0)/amount), numbers))
@@ -77,12 +78,11 @@ def main():
             nodes = equadistant(x0, x1, n)
             regressed = [poly(regress(f, nodes, degree), points[i]) for i in range(amount)]
             res.append([n, degree, max_diff(regressed, values, amount), mean_square_error(regressed, values, amount)])
-            print(n, degree)
             plt.xlabel('oś X')
             plt.ylabel('oś Y')
             plt.title('Aproksymacja')
             plt.plot(points, values, 'b-', points, regressed, 'grey',
                     nodes, list(map(f, nodes)), 'r.', markersize=10)
             plt.show()
-    save(res)
+    #save(res)
 main()

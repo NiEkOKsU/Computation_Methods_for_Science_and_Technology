@@ -1,8 +1,12 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import sys
+import pandas as pd
 
+def save(results):
+    df = pd.DataFrame(results)
+    print(df)
+    df.to_excel(r'D:\Computation_Methods_for_Science_and_Technology\lab6\res_eq.xlsx')
 
 def chebyshew(x0, x1, n):
     result = []
@@ -17,17 +21,23 @@ def equadistant(x0, x1, n):
         result.append(x0 + i*(x1-x0)/(n-1))
     return result
 
-
-def get_error(x, y):
-    err = 0
-    for i in range(len(x)):
-        err +=(x[i] - y[i])**2
-    err = err / len(x)
-    return np.sqrt(err)
+def max_diff(fval, intrval, n):
+    max_df = 0
+    for i in range(n):
+        max_df = max(abs(fval[i] - intrval[i]), max_df)
+    return max_df
 
 
-def fun(x):
-    return math.sin(x) * math.sin(x**2/math.pi)
+def mean_square_error(fval, intrval, n):
+    error = 0
+    for i in range(n):
+        error += (fval[i] - intrval[i]) ** 2
+    error = math.sqrt(error) / n
+    return error
+
+
+def f(x):
+    return np.e**(4*np.cos(2*x))
 
 
 def get_trig_coeff(m, k, nodes):
@@ -35,8 +45,8 @@ def get_trig_coeff(m, k, nodes):
     bkl = []
     n = len(nodes)
     for i in range(n):
-        akl.append(fun(nodes[i]*3/2) * np.cos(k*nodes[i]))
-        bkl.append(fun(nodes[i]*3/2) * np.sin(k*nodes[i]))
+        akl.append(f(nodes[i]*3/2) * np.cos(k*nodes[i]))
+        bkl.append(f(nodes[i]*3/2) * np.sin(k*nodes[i]))
     return (sum(akl) / (n/2)), (sum(bkl) / (n/2))
 
 
@@ -51,30 +61,28 @@ def approximate_trig(x, nodes, m):  # N is for degree of the approximation
     return res
 
 
-n = int(sys.argv[1])
-degree = int(sys.argv[2])
-if n <= degree:
-    sys.exit()
-sys.argv[3] = sys.argv[3]+sys.argv[1]+"_"+sys.argv[2]+".pdf"
-amount = 1000
-x0 = -math.pi
-x1 = 2 * math.pi
-numbers = range(amount)
-points = list(map(lambda x: (x0 + x*(x1-x0)/amount), numbers))
-values = list(map(fun, points))
-nodes = equadistant(-np.pi, 2*np.pi, n)
-regressed = []
-
-for i in range(amount):
-    regressed.append(approximate_trig(points[i], nodes, degree))
-
-plt.xlabel('X axis')
-plt.ylabel('Y axis')
-plt.title('Regression')
-plt.plot(points, values, 'b-', points, regressed, 'r-',
-         nodes, list(map(fun, nodes)), 'y.')
-plt.savefig(sys.argv[3])
-
-norm = get_error(regressed, values)
-z = "%i %i %f" % (n, degree, norm)
-print(z)
+def main():
+    wezly = [4,10,15,20,30,50,100]
+    res = [['Liczba węzłów', 'stopien wielomanu','blad max', 'mse']]
+    amount = 10000
+    x0 = -math.pi
+    x1 = 3 * math.pi
+    numbers = range(amount)
+    for n in wezly:
+        for degree in range(2,10):
+            if n<=degree:
+                break
+            points = list(map(lambda x: (x0 + x*(x1-x0)/amount), numbers))
+            values = list(map(f, points))
+            nodes = equadistant(x0, x1, n)
+            regressed = [regressed.append(approximate_trig(points[n], nodes, degree))]
+            res.append([n, degree, max_diff(regressed, values, amount), mean_square_error(regressed, values, amount)])
+            print(n, degree)
+            plt.xlabel('oś X')
+            plt.ylabel('oś Y')
+            plt.title('Aproksymacja')
+            plt.plot(points, values, 'b-', points, regressed, 'grey',
+                    nodes, list(map(f, nodes)), 'r.', markersize=10)
+            plt.show()
+    save(res)
+main()
