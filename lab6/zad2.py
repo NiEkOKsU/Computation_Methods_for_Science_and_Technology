@@ -6,7 +6,7 @@ import pandas as pd
 def save(results):
     df = pd.DataFrame(results)
     print(df)
-    df.to_excel(r'D:\Computation_Methods_for_Science_and_Technology\lab6\res_eq.xlsx')
+    df.to_excel(r'D:\Computation_Methods_for_Science_and_Technology\lab6\test.xlsx')
 
 def chebyshew(x0, x1, n):
     result = []
@@ -39,14 +39,13 @@ def mean_square_error(fval, intrval, n):
 def f(x):
     return np.e**(4*np.cos(2*x))
 
-
 def get_trig_coeff(m, k, nodes):
     akl = []
     bkl = []
     n = len(nodes)
     for i in range(n):
-        akl.append(f(nodes[i]*3/2) * np.cos(k*nodes[i]))
-        bkl.append(f(nodes[i]*3/2) * np.sin(k*nodes[i]))
+        akl.append(f(nodes[i]*2) * np.cos(k*nodes[i]))
+        bkl.append(f(nodes[i]*2) * np.sin(k*nodes[i]))
     return (sum(akl) / (n/2)), (sum(bkl) / (n/2))
 
 
@@ -55,27 +54,27 @@ def approximate_trig(x, nodes, m):  # N is for degree of the approximation
     res = 0
     for k in range(1, m):
         ak, bk = get_trig_coeff(m, k, nodes)
-        res += ak * np.cos(2/3 * k * x)
-        res += bk * np.sin(2/3 * k * x)
+        res += 1/2 * ak * np.cos(k * x)
+        res += 1/2 * bk * np.sin(k * x)
     res += a0 / 2
     return res
 
 
 def main():
-    wezly = [4,10,15,20,30,50,100]
+    wezly = [15]
     res = [['Liczba węzłów', 'stopien wielomanu','blad max', 'mse']]
     amount = 10000
     x0 = -math.pi
     x1 = 3 * math.pi
     numbers = range(amount)
     for n in wezly:
-        for degree in range(2,10):
+        for degree in range(10,13):
             if n<=degree:
                 break
             points = list(map(lambda x: (x0 + x*(x1-x0)/amount), numbers))
             values = list(map(f, points))
             nodes = equadistant(x0, x1, n)
-            regressed = [regressed.append(approximate_trig(points[n], nodes, degree))]
+            regressed = [approximate_trig(points[i], nodes, degree) for i in range(amount)]
             res.append([n, degree, max_diff(regressed, values, amount), mean_square_error(regressed, values, amount)])
             print(n, degree)
             plt.xlabel('oś X')
@@ -85,4 +84,5 @@ def main():
                     nodes, list(map(f, nodes)), 'r.', markersize=10)
             plt.show()
     save(res)
+
 main()
