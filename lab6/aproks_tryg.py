@@ -75,7 +75,7 @@ def visualize(x, y, start, stop, n, m, function):
     plt.figure(figsize=(8, 6))
     plt.scatter(x, y, label="Węzły", color="red")
     X = np.arange(start, stop + 0.01, 0.01)
-    plt.plot(X, f(X), label="Funckja aproksymowana", color="blue")
+    plt.plot(X, f(X), label="Funkcja aproksymowana", color="blue")
     plt.plot(X, function(X), label="Wielomian aproksymujący", color="grey")
     plt.title(f"Aproksymacji trygonometryczna dla {n} węzłów i m={m}")
     plt.xlabel("x")
@@ -106,6 +106,7 @@ def main():
             trigonometric_approximation = TrigonometricApproximation(X, Y, n, f_num, x0, x1)
             trig_appr_result = trigonometric_approximation.approximate(total_X)
             res.append([n, f_num, max_error(trig_appr_result, func_val), mean_square_error(trig_appr_result, func_val)])
-            visualize(X, Y, x0, x1, n, f_num, trigonometric_approximation.approximate)
+            #visualize(X, Y, x0, x1, n, f_num, trigonometric_approximation.approximate)
+            print(trigonometric_approximation.A)
     #save(res) żeby zapisać wyniki i je wyświtlić należy odkomentowaćtą linijkę
 main()

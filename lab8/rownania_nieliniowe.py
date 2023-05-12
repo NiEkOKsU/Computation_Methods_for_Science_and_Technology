@@ -1,7 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-#pd.options.display.float_format = "{:,.12f}".format
+pd.options.display.float_format = "{:,.12f}".format
+
+def save(results):
+    df = pd.DataFrame(results)
+    print(df)
+    path = r'D:\Computation_Methods_for_Science_and_Technology\lab8\res_newton_10-9.xlsx'
+    df.to_excel(path)
 
 def func1(x):
     return x**14 + x**13
@@ -43,28 +49,21 @@ def secant(func, x_1, x_2, epsilon, max_iter, stop_condition):
     return None, np.inf
 
 def create_dataframe(method_name, epsilon, max_iter, stop_condition):
-    X = np.arange(-1, 1 + 0.1, 0.1)
+    X = np.arange(-1.4, 0.6 + 0.1, 0.1)
     result = []
     for x_0 in X:
         if method_name == "newton":
-            x, n = newtons_method(func1, der_func1, x_0, np.e**(-20), max_iter, stop_condition)
+            x, n = newtons_method(func1, der_func1, x_0, epsilon, max_iter, stop_condition)
             result += [x, n, x_0]
         elif method_name == "secant":
-                x, n = secant(func1, x_0, 1, np.e**(-20), 100, "points")
+                x, n = secant(func1, x_0, 0.6, epsilon, max_iter, stop_condition)
                 result += [x, n, x_0]
-                x, n = secant(func1, -1, x_0, np.e**(-20), 100, "points")
+                x, n = secant(func1, -1.4, x_0, epsilon, max_iter, stop_condition)
                 result += [x, n, x_0]
     df = pd.DataFrame(data={"x value": result[::3],
                             "num of iterations": result[1::3],
                             "point": result[2::3]})
     return df
 
-def plot():
-    X = np.arange(-1.4, 0.6+0.01, 0.01)
-    plt.plot(X, func1(X), label = "Funkcja")
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.grid()
-    plt.show()
 
-plot()
+save(create_dataframe("secant", 10**(-9), 1000, "points"))
