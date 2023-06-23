@@ -1,2 +1,0 @@
-Przy zainstalowanym pythonie wystarczy w terminalu wpisać komende python <nazwapliku> (w przypadku systemu linuks python3 <nazwapliku>)
-np. python lagrange_formula.py
